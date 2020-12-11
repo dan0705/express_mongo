@@ -1,43 +1,48 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+require('dotenv').config();
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const SALT = 10;
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "asdflkj";
+const PRIVATE_KEY = process.env.PRIVATE_KEY || 'asdflkj';
 
-const userSchema = mongoose.Schema({
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    trim: true,
-    unique: 1,
+const userSchema = mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      trim: true,
+      unique: 1,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minlength: 6,
+    },
+    firstName: {
+      type: String,
+      require: [true, 'Firstname is required'],
+      trim: true,
+      maxlength: 100,
+    },
+    lastName: {
+      type: String,
+      required: [true, 'Lastname is required'],
+      trim: true,
+      maxlength: 100,
+    },
+    token: {
+      type: String,
+    },
+    gender: String,
+    phone: String,
   },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-    minlength: 6,
-  },
-  firstName: {
-    type: String,
-    require: [true, "Firstname is required"],
-    trim: true,
-    maxlength: 100,
-  },
-  lastName: {
-    type: String,
-    required: [true, "Lastname is required"],
-    trim: true,
-    maxlength: 100,
-  },
-  token: {
-    type: String,
-  },
-});
+  { timestamps: true }
+);
 
-userSchema.pre("save", function (next) {
-  let user = this;
-  if (user.isModified("password")) {
+userSchema.pre('save', function (next) {
+  const user = this;
+  if (user.isModified('password')) {
     // checking if password field is available and modified
     bcrypt.hash(user.password, SALT, function (err, hash) {
       if (err) return next(err);
@@ -60,7 +65,7 @@ userSchema.methods.comparePassword = function (candidatePaswsword, callBack) {
 // generating token when loggedIn
 userSchema.methods.generateToken = function (callBack) {
   const user = this;
-  let token = jwt.sign(user._id.toHexString(), process.env.SECRETE);
+  const token = jwt.sign(user._id.toHexString(), PRIVATE_KEY);
   user.token = token;
   user.save(function (err, user) {
     if (err) return callBack(err);
@@ -80,5 +85,6 @@ userSchema.statics.findByToken = function (token, callBack) {
   });
 };
 
-const User = mongoose.model("User", userSchema);
+// auto change from User > users collection in db
+const User = mongoose.model('User', userSchema);
 module.exports = { User };
