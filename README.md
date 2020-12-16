@@ -19,4 +19,4 @@ yarn start
 
 ### Hi
 
-> This is the most easy, incomprehensible project to help you know about ExpressJs, MongoDb, auth, CRUD.
+> This is the easiest, most comprehensible project to help you know about ExpressJs, MongoDb, auth, CRUD.
