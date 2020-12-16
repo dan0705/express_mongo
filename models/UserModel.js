@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const SALT = 10;
-const PRIVATE_KEY = process.env.PRIVATE_KEY || 'asdflkj';
+const JWT_AUTH_TOKEN_SECRET = process.env.JWT_AUTH_TOKEN_SECRET || 'asdflkj';
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -65,7 +65,7 @@ userSchema.methods.comparePassword = function (candidatePaswsword, callBack) {
 // generating token when loggedIn
 userSchema.methods.generateToken = function (callBack) {
   const user = this;
-  const token = jwt.sign(user._id.toHexString(), PRIVATE_KEY);
+  const token = jwt.sign(user._id.toHexString(), JWT_AUTH_TOKEN_SECRET);
   user.token = token;
   user.save(function (err, user) {
     if (err) return callBack(err);
@@ -76,9 +76,9 @@ userSchema.methods.generateToken = function (callBack) {
 // vakidating token for auth routes middleware
 userSchema.statics.findByToken = function (token, callBack) {
   const user = this;
-  jwt.verify(token, PRIVATE_KEY, function (err, decode) {
+  jwt.verify(token, JWT_AUTH_TOKEN_SECRET, function (err, decode) {
     // decode must give user_id if token is valid .ie decode = user_id
-    user.findOne({ id: decode, token: token }, function (err, user) {
+    user.findOne({ _id: decode, token: token }, function (err, user) {
       if (err) return callBack(err);
       callBack(null, user);
     });

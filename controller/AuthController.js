@@ -6,7 +6,7 @@ exports.RegisterUser = (req, res, next) => {
     if (!existedUser) {
       user.save((err, doc) => {
         if (err) {
-          res.status(422).json({ errors: err });
+          res.status(422).json({ error: err });
         } else {
           const userData = {
             firstName: doc.firstName,
@@ -57,7 +57,7 @@ exports.LoginUser = (req, res) => {
               res.cookie('authToken', user.token).status(200).json({
                 success: true,
                 message: 'Successfully Logged In.',
-                userData: data,
+                user: data,
               });
             }
           });

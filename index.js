@@ -12,8 +12,13 @@ const apiRoutes = require('./routes');
 // mongodb://localhost/xyz
 mongoose.connect(DB_NAME, {
   useNewUrlParser: true,
+  useFindAndModify: false,
   useUnifiedTopology: true,
   useCreateIndex: true,
+});
+
+app.get('/', (req, res) => {
+  res.send('Hi');
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
