@@ -8,8 +8,9 @@
 ### Db Info
 
 - Users
+  - One user has multiple pet
 - Pets
-
+  - One kind of pet can be fed by multiple users
 ### Install
 
 ```
