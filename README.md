@@ -8,7 +8,7 @@
 ### Db Info
 
 - Users
-- Games
+- Pets
 
 ### Install
 
