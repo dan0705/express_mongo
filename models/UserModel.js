@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     firstName: {
       type: String,
-      require: [true, 'Firstname is required'],
+      required: [true, 'Firstname is required'],
       trim: true,
       maxlength: 100,
     },
@@ -31,11 +31,23 @@ const userSchema = new mongoose.Schema(
       trim: true,
       maxlength: 100,
     },
+    role: {
+      type: String,
+    },
     token: {
       type: String,
     },
-    gender: String,
+    gender: {
+      type: String,
+      enum: ['male', 'female'],
+    },
     phone: String,
+    pets: [
+      {
+        _id: String,
+        amount: Number,
+      },
+    ],
   },
   { timestamps: true }
 );

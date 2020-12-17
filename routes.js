@@ -4,8 +4,10 @@ const {
   RegisterUser,
   LoginUser,
   LogoutUser,
-  getUserDetails,
-} = require('./controller/AuthController');
+  GetUserDetails,
+  ChangePassword,
+  ChangeUserInfo,
+} = require('./controller/UserController');
 
 const { auth } = require('./middleware/auth');
 
@@ -17,11 +19,12 @@ router.get('/', (req, res) => {
 });
 
 router.route('/users/register').post(RegisterUser);
-
 router.route('/users/login').post(LoginUser);
-
-router.route('/users/user').get(auth, getUserDetails);
-
+router.route('/users/change-password').post(auth, ChangePassword);
 router.route('/users/logout').get(auth, LogoutUser);
+router
+  .route('/users/user')
+  .get(auth, GetUserDetails)
+  .post(auth, ChangeUserInfo)
 
 module.exports = router;
