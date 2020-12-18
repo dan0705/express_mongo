@@ -3,7 +3,7 @@ const auth = (req, res, next) => {
   const token = req.cookies.authToken;
   User.findByToken(token, (err, user) => {
     if (err) throw err;
-    if (!user) return res.status(400).json({
+    if (!user) return res.status(401).json({
       success: false,
       message: 'Not authorized'
     });
@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') {
-    return res.status(400).json({
+    return res.status(401).json({
       success: false,
       message: 'You are not an admin',
     })

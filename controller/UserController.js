@@ -1,26 +1,31 @@
 const { User } = require('../models/UserModel');
 
+const returnedUserInfo = (fromDoc) => {
+  return {
+    _id: fromDoc._id,
+    email: fromDoc.email,
+    firstName: fromDoc.firstName,
+    lastName: fromDoc.lastName,
+    gender: fromDoc.gender,
+    phone: fromDoc.phone,
+    pets: fromDoc.pets,
+    createdAt: fromDoc.createdAt,
+    updatedAt: fromDoc.updatedAt,
+  };
+};
+
 exports.RegisterUser = (req, res, next) => {
   const user = new User(req.body);
   User.findOne({ email: req.body.email }, (err, existedUser) => {
     if (!existedUser) {
-      user.save((err, doc) => {
+      user.save((err, thisUser) => {
         if (err) {
           res.status(422).json({ error: err });
         } else {
-          const userData = {
-            firstName: doc.firstName,
-            lastName: doc.lastName,
-            email: doc.email,
-            gender: doc.gender,
-            phone: doc.phone,
-            createdAt: doc.createdAt,
-            updatedAt: doc.updatedAt,
-          };
           res.status(200).json({
             success: true,
             message: 'Successfully signed up.',
-            user: userData,
+            user: returnedUserInfo(thisUser),
           });
         }
         next();
@@ -88,13 +93,7 @@ exports.LogoutUser = (req, res) => {
 exports.GetUserDetails = (req, res) => {
   return res.status(200).json({
     isAuthenticated: true,
-    email: req.user.email,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName,
-    gender: req.user.gender,
-    phone: req.user.phone,
-    createdAt: req.user.createdAt,
-    updatedAt: req.user.updatedAt,
+    ...returnedUserInfo(req.user),
   });
 };
 
@@ -108,17 +107,24 @@ exports.ChangePassword = (req, res) => {
           success: false,
           message: 'Wrong password.',
         });
+      } else if (req.body.newPassword.length < 6) {
+        return res.status(400).send({
+          success: false,
+          error: 'New password must be greater equal than 6 characters.',
+        });
       } else if (req.body.currentPassword === req.body.newPassword) {
         return res.status(400).json({
           success: false,
-          message: 'New password is current password',
+          message: 'New password is still current password',
         });
       } else {
         user.password = req.body.newPassword;
-        user.save();
-        return res.status(200).json({
-          success: true,
-          message: 'Change password successfully',
+        user.save((err) => {
+          if (err) return res.json({ success: false, err })
+          return res.status(200).json({
+            success: true,
+            message: 'Change password successfully',
+          });
         });
       }
     });
@@ -136,30 +142,16 @@ exports.ChangeUserInfo = (req, res) => {
     if (req.body.lastName) user.lastName = req.body.lastName;
     if (req.body.gender) user.gender = req.body.gender;
     if (req.body.phone) user.phone = req.body.phone;
-    user.save((err, doc) => {
+    user.save((err, thisUser) => {
       if (err) {
         res.status(422).json({ error: err });
       } else {
-        const userData = {
-          email: doc.email,
-          firstName: doc.firstName,
-          lastName: doc.lastName,
-          gender: doc.gender,
-          phone: doc.phone,
-          pets: doc.pets,
-          createdAt: doc.createdAt,
-          updatedAt: doc.updatedAt,
-        };
         res.status(200).json({
           success: true,
           message: 'Successfully modify info.',
-          user: userData,
+          user: returnedUserInfo(thisUser),
         });
       }
     });
-    return res.status(200).json({
-      success: true,
-      user: user
-    })
   });
 };

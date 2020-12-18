@@ -15,12 +15,12 @@ const petSchema = new mongoose.Schema(
     },
     intelligence: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
     },
     loyalty: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
     },
     owners: {
