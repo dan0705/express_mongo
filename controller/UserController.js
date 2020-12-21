@@ -1,6 +1,6 @@
 const { User } = require('../models/UserModel');
 
-const returnedUserInfo = (fromDoc) => {
+const getListOfUserInfo = (fromDoc) => {
   return {
     _id: fromDoc._id,
     email: fromDoc.email,
@@ -25,7 +25,7 @@ exports.RegisterUser = (req, res, next) => {
           res.status(200).json({
             success: true,
             message: 'Successfully signed up.',
-            user: returnedUserInfo(thisUser),
+            user: getListOfUserInfo(thisUser),
           });
         }
         next();
@@ -93,7 +93,7 @@ exports.LogoutUser = (req, res) => {
 exports.GetUserDetails = (req, res) => {
   return res.status(200).json({
     isAuthenticated: true,
-    ...returnedUserInfo(req.user),
+    user: getListOfUserInfo(req.user),
   });
 };
 
@@ -149,7 +149,7 @@ exports.ChangeUserInfo = (req, res) => {
         res.status(200).json({
           success: true,
           message: 'Successfully modify info.',
-          user: returnedUserInfo(thisUser),
+          user: getListOfUserInfo(thisUser),
         });
       }
     });
