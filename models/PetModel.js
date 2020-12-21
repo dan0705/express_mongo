@@ -4,7 +4,7 @@ const petSchema = new mongoose.Schema(
   {
     animal: {
       type: String,
-      required: [true, 'Animal name is required'],
+      required: [true, 'Animal name is required.'],
       trim: true,
       unique: 1,
     },
@@ -15,12 +15,12 @@ const petSchema = new mongoose.Schema(
     },
     intelligence: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
     },
     loyalty: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
     },
     owners: {

@@ -10,29 +10,30 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, 'Email is required.'],
       trim: true,
       unique: 1,
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [true, 'Password is required.'],
       minlength: 6,
     },
     firstName: {
       type: String,
-      required: [true, 'Firstname is required'],
+      required: [true, 'Firstname is required.'],
       trim: true,
       maxlength: 100,
     },
     lastName: {
       type: String,
-      required: [true, 'Lastname is required'],
+      required: [true, 'Lastname is required.'],
       trim: true,
       maxlength: 100,
     },
     role: {
       type: String,
+      enum: ['admin', 'normal']
     },
     token: {
       type: String,
