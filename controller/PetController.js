@@ -1,6 +1,6 @@
 const { Pet } = require('../models/PetModel');
 
-const returnedPetInfo = (fromDoc) => {
+const getListOfPetInfo = (fromDoc) => {
   return {
     _id: fromDoc._id,
     animal: fromDoc.animal,
@@ -23,7 +23,7 @@ exports.AddPet = (req, res, next) => {
           res.status(200).json({
             success: true,
             message: 'Add pet successfully.',
-            pet: returnedPetInfo(thisPet),
+            pet: getListOfPetInfo(thisPet),
           });
         }
         next();
