@@ -17,10 +17,19 @@ const getListOfUserInfo = (fromDoc) => {
 exports.RegisterUser = (req, res, next) => {
   const user = new User(req.body);
   User.findOne({ email: req.body.email }, (err, existedUser) => {
+    if (err) {
+      res.status(400).json({
+      success: false,
+      message: err,
+    })
+  }
     if (!existedUser) {
       user.save((err, thisUser) => {
         if (err) {
-          res.status(422).json({ error: err });
+          res.status(422).json({
+            success: false,
+            message: err 
+          });
         } else {
           res.status(200).json({
             success: true,
