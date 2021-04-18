@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const SALT = 10;
-const JWT_AUTH_TOKEN_SECRET = process.env.JWT_AUTH_TOKEN_SECRET || 'asdflkj';
+const SALT_WORK_FACTOR = Number(process.env.SALT_WORK_FACTOR);
+const JWT_AUTH_TOKEN_SECRET = process.env.JWT_AUTH_TOKEN_SECRET;
 
 const userSchema = new mongoose.Schema(
   {
@@ -56,12 +56,18 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', function (next) {
   const user = this;
   if (user.isModified('password')) {
-    // checking if password field is available and modified
-    bcrypt.hash(user.password, SALT, function (err, hash) {
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
       if (err) return next(err);
-      user.password = hash;
-      next();
-    });
+
+      // checking if password field is available and modified
+      bcrypt.hash(user.password, salt, function (err, hash) {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+      });
+
+    })
+
   } else {
     next();
   }

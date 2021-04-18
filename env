@@ -1,0 +1,6 @@
+PORT=8081
+DB_URL=mongodb://127.0.0.1:27017
+DB_NAME=human_pet
+
+SALT_WORK_FACTOR=10
+JWT_AUTH_TOKEN_SECRET=hahahahaha

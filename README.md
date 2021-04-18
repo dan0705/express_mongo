@@ -14,7 +14,7 @@
 ### Install
 ```bash
 cd human-and-pet
-echo 'PORT={your port}\nDB_NAME={your mongodb name}\nPRIVATE_KEY={your jwt secret}' >> .env
+mv env .env # change your variables in .env file
 yarn
 yarn start
 ```
